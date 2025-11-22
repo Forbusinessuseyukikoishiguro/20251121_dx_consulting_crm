@@ -871,15 +871,15 @@ total_estimated = Project.objects.filter(
 
 ## 付録B: 参考資料　環境構築・セットアップコマンド一覧
 
-### ★初回★
+## ★初回★
 ステップ1: リポジトリをクローン
 bash# 任意の作業フォルダに移動（例：デスクトップ）
 cd ~/Desktop
 
-# リポジトリをクローン
+### リポジトリをクローン
 git clone https://github.com/Forbusinessuseyukikoishiguro/20251121_dx_consulting_crm.git
 
-# プロジェクトフォルダに移動
+### プロジェクトフォルダに移動
 cd 20251121_dx_consulting_crm
 Windows PowerShellの場合：
 powershellcd C:\Users\あなたのユーザー名\Desktop
@@ -891,14 +891,14 @@ Mac / Linux の場合
 bash# 仮想環境を作成
 python3 -m venv venv
 
-# 仮想環境を有効化
+### 仮想環境を有効化
 source venv/bin/activate
 有効化されると、プロンプトの先頭に (venv) が表示されます。
 Windows の場合
 powershell# 仮想環境を作成
 python -m venv venv
 
-# 仮想環境を有効化
+### 仮想環境を有効化
 venv\Scripts\activate
 有効化されると、プロンプトの先頭に (venv) が表示されます。
 
@@ -969,40 +969,40 @@ bash# クローン
 git clone https://github.com/Forbusinessuseyukikoishiguro/20251121_dx_consulting_crm.git
 cd 20251121_dx_consulting_crm
 
-# 仮想環境作成・有効化
+### 仮想環境作成・有効化
 python3 -m venv venv
 source venv/bin/activate
 
-# パッケージインストール
+### パッケージインストール
 pip install -r requirements.txt
 
-# データベースセットアップ
+### データベースセットアップ
 python manage.py migrate
 
-# サンプルデータ読み込み（オプション）
+### サンプルデータ読み込み（オプション）
 python manage.py load_sample_data
 
-# サーバー起動
+### サーバー起動
 python manage.py runserver
 Windows PowerShell
 powershell# クローン
 git clone https://github.com/Forbusinessuseyukikoishiguro/20251121_dx_consulting_crm.git
 cd 20251121_dx_consulting_crm
 
-# 仮想環境作成・有効化
+### 仮想環境作成・有効化
 python -m venv venv
 venv\Scripts\activate
 
-# パッケージインストール
+### パッケージインストール
 pip install -r requirements.txt
 
-# データベースセットアップ
+### データベースセットアップ
 python manage.py migrate
 
-# サンプルデータ読み込み（オプション）
+### サンプルデータ読み込み（オプション）
 python manage.py load_sample_data
 
-# サーバー起動
+### サーバー起動
 python manage.py runserver
 
 ---
