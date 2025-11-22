@@ -1,0 +1,57 @@
+{% extends 'projects/base.html' %}
+
+{% block title %}顧客一覧 - DX Consulting CRM{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem;">🏢 顧客一覧</h1>
+
+<!-- 検索 -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <form method="get" style="display: flex; gap: 1rem;">
+        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <input type="text" name="search" class="form-control" placeholder="会社名・担当者名・業種で検索" value="{{ search_query|default:'' }}">
+        </div>
+        <button type="submit" class="btn btn-primary">検索</button>
+        <a href="{% url 'projects:client_list' %}" class="btn btn-secondary">クリア</a>
+    </form>
+</div>
+
+<!-- 顧客一覧 -->
+<div class="card">
+    <h2>全{{ clients.count }}社</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>会社名</th>
+                <th>担当者</th>
+                <th>業種</th>
+                <th>企業規模</th>
+                <th>案件数</th>
+                <th>登録日</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr>
+                <td><strong>{{ client.company_name }}</strong></td>
+                <td>{{ client.contact_person }}</td>
+                <td>{{ client.industry|default:"-" }}</td>
+                <td>{{ client.company_size|default:"-" }}</td>
+                <td>{{ client.project_count }}件</td>
+                <td>{{ client.created_at|date:"Y/m/d" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem;">
+                    顧客情報がありません。管理画面から新規顧客を登録してください。
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top: 1.5rem;">
+    <a href="/admin/projects/client/add/" class="btn btn-success">+ 新規顧客登録</a>
+</div>
+{% endblock %}

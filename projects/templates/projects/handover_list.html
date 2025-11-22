@@ -1,0 +1,79 @@
+{% extends 'projects/base.html' %}
+
+{% block title %}引継ぎ記録 - DX Consulting CRM{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem;">🔄 引継ぎ記録</h1>
+
+<!-- フィルター -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <form method="get" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <div class="form-group" style="min-width: 200px; margin-bottom: 0;">
+            <select name="type" class="form-control">
+                <option value="">全ての引継ぎ先</option>
+                {% for value, label in handover_types %}
+                <option value="{{ value }}" {% if current_type == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group" style="min-width: 150px; margin-bottom: 0;">
+            <select name="status" class="form-control">
+                <option value="">全てのステータス</option>
+                <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>対応中</option>
+                <option value="completed" {% if current_status == 'completed' %}selected{% endif %}>完了</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">検索</button>
+        <a href="{% url 'projects:handover_list' %}" class="btn btn-secondary">クリア</a>
+    </form>
+</div>
+
+<!-- 引継ぎ一覧 -->
+<div class="card">
+    <h2>全{{ handovers.count }}件</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>案件名</th>
+                <th>顧客</th>
+                <th>引継ぎ先</th>
+                <th>担当者</th>
+                <th>引継ぎ日時</th>
+                <th>ステータス</th>
+                <th>内容</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for handover in handovers %}
+            <tr>
+                <td><a href="{% url 'projects:project_detail' handover.project.pk %}">{{ handover.project.title }}</a></td>
+                <td>{{ handover.project.client.company_name }}</td>
+                <td>{{ handover.get_handover_type_display }}</td>
+                <td><strong>{{ handover.handover_to }}</strong></td>
+                <td>{{ handover.handover_date|date:"Y/m/d H:i" }}</td>
+                <td>
+                    {% if handover.is_completed %}
+                    <span class="badge badge-success">完了</span>
+                    {% else %}
+                    <span class="badge badge-warning">対応中</span>
+                    {% endif %}
+                </td>
+                <td style="max-width: 300px;">{{ handover.handover_content|truncatewords:20 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 2rem;">
+                    引継ぎ記録がありません。
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top: 1.5rem;">
+    <a href="/admin/projects/handover/add/" class="btn btn-success">+ 新規引継ぎ記録</a>
+</div>
+{% endblock %}

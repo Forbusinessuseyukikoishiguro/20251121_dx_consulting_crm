@@ -1,0 +1,163 @@
+{% extends 'projects/base.html' %}
+
+{% block title %}ダッシュボード - DX Consulting CRM{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem;">📊 ダッシュボード</h1>
+
+<!-- 統計カード -->
+<div class="grid grid-4" style="margin-bottom: 2rem;">
+    <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <h3>{{ new_projects_count }}</h3>
+        <p>今月の新規案件</p>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+        <h3>{{ active_projects_count }}</h3>
+        <p>進行中の案件</p>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+        <h3>¥{{ total_estimated|floatformat:0|default:"0" }}</h3>
+        <p>見積総額</p>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+        <h3>{{ pending_handoffs|length }}</h3>
+        <p>引継ぎ待ち</p>
+    </div>
+</div>
+
+<!-- ステータス別案件数 -->
+<div class="card">
+    <h2>📈 ステータス別案件数</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ステータス</th>
+                <th>件数</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in status_stats %}
+            <tr>
+                <td>
+                    {% if stat.status == 'inquiry' %}初回相談
+                    {% elif stat.status == 'hearing' %}ヒアリング中
+                    {% elif stat.status == 'proposal' %}提案作成中
+                    {% elif stat.status == 'quotation' %}見積提示
+                    {% elif stat.status == 'negotiation' %}商談中
+                    {% elif stat.status == 'handover' %}エンジニア引継ぎ
+                    {% elif stat.status == 'in_progress' %}実施中
+                    {% elif stat.status == 'completed' %}完了
+                    {% elif stat.status == 'on_hold' %}保留
+                    {% elif stat.status == 'lost' %}失注
+                    {% endif %}
+                </td>
+                <td><strong>{{ stat.count }}</strong>件</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">データがありません</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 最近の案件 -->
+<div class="card">
+    <h2>🆕 最近の案件</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>案件名</th>
+                <th>顧客</th>
+                <th>ステータス</th>
+                <th>見積金額</th>
+                <th>作成日</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in recent_projects %}
+            <tr>
+                <td><a href="{% url 'projects:project_detail' project.pk %}">{{ project.title }}</a></td>
+                <td>{{ project.client.company_name }}</td>
+                <td>
+                    {% if project.status == 'inquiry' %}<span class="badge badge-info">初回相談</span>
+                    {% elif project.status == 'hearing' %}<span class="badge badge-primary">ヒアリング中</span>
+                    {% elif project.status == 'proposal' %}<span class="badge badge-warning">提案作成中</span>
+                    {% elif project.status == 'negotiation' %}<span class="badge badge-warning">商談中</span>
+                    {% elif project.status == 'in_progress' %}<span class="badge badge-success">実施中</span>
+                    {% elif project.status == 'completed' %}<span class="badge badge-success">完了</span>
+                    {% else %}<span class="badge">{{ project.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>{% if project.estimated_amount %}¥{{ project.estimated_amount|floatformat:0 }}{% else %}未設定{% endif %}</td>
+                <td>{{ project.created_at|date:"Y/m/d" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">案件がありません</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- エンジニア引継ぎ待ち -->
+{% if pending_handoffs %}
+<div class="card">
+    <h2>⚠️ エンジニア引継ぎ待ち</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>案件名</th>
+                <th>エンジニア</th>
+                <th>引継ぎ日</th>
+                <th>予算</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for handoff in pending_handoffs %}
+            <tr>
+                <td><a href="{% url 'projects:project_detail' handoff.project.pk %}">{{ handoff.project.title }}</a></td>
+                <td>{{ handoff.engineer_name }}</td>
+                <td>{{ handoff.handoff_date|date:"Y/m/d H:i" }}</td>
+                <td>{% if handoff.budget %}¥{{ handoff.budget|floatformat:0 }}{% else %}未設定{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<!-- 最近の活動記録 -->
+<div class="card">
+    <h2>📝 最近の活動記録</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>案件名</th>
+                <th>活動種別</th>
+                <th>記録日時</th>
+                <th>記録者</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in recent_activities %}
+            <tr>
+                <td><a href="{% url 'projects:project_detail' activity.project.pk %}">{{ activity.project.title }}</a></td>
+                <td>{{ activity.get_activity_type_display }}</td>
+                <td>{{ activity.log_date|date:"Y/m/d H:i" }}</td>
+                <td>{{ activity.created_by }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">活動記録がありません</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

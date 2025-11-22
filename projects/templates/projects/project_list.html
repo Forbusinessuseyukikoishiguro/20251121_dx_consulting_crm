@@ -1,0 +1,83 @@
+{% extends 'projects/base.html' %}
+
+{% block title %}案件一覧 - DX Consulting CRM{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem;">📋 案件一覧</h1>
+
+<!-- 検索・フィルター -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <form method="get" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <div class="form-group" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+            <input type="text" name="search" class="form-control" placeholder="案件名・顧客名で検索" value="{{ search_query|default:'' }}">
+        </div>
+        
+        <div class="form-group" style="min-width: 150px; margin-bottom: 0;">
+            <select name="status" class="form-control">
+                <option value="">全てのステータス</option>
+                {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if current_status == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">検索</button>
+        <a href="{% url 'projects:project_list' %}" class="btn btn-secondary">クリア</a>
+    </form>
+</div>
+
+<!-- 案件一覧 -->
+<div class="card">
+    <h2>全{{ projects.count }}件</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>案件名</th>
+                <th>顧客</th>
+                <th>ステータス</th>
+                <th>見積金額</th>
+                <th>開始予定日</th>
+                <th>作成日</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td><strong>{{ project.title }}</strong></td>
+                <td>{{ project.client.company_name }}</td>
+                <td>
+                    {% if project.status == 'inquiry' %}<span class="badge badge-info">初回相談</span>
+                    {% elif project.status == 'hearing' %}<span class="badge badge-primary">ヒアリング中</span>
+                    {% elif project.status == 'proposal' %}<span class="badge badge-warning">提案作成中</span>
+                    {% elif project.status == 'quotation' %}<span class="badge badge-warning">見積提示</span>
+                    {% elif project.status == 'negotiation' %}<span class="badge badge-warning">商談中</span>
+                    {% elif project.status == 'handover' %}<span class="badge badge-info">エンジニア引継ぎ</span>
+                    {% elif project.status == 'in_progress' %}<span class="badge badge-success">実施中</span>
+                    {% elif project.status == 'completed' %}<span class="badge badge-success">完了</span>
+                    {% elif project.status == 'on_hold' %}<span class="badge">保留</span>
+                    {% elif project.status == 'lost' %}<span class="badge badge-danger">失注</span>
+                    {% endif %}
+                </td>
+                <td>{% if project.estimated_amount %}¥{{ project.estimated_amount|floatformat:0 }}{% else %}-{% endif %}</td>
+                <td>{% if project.start_date %}{{ project.start_date|date:"Y/m/d" }}{% else %}-{% endif %}</td>
+                <td>{{ project.created_at|date:"Y/m/d" }}</td>
+                <td>
+                    <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-primary" style="padding: 0.25rem 0.75rem;">詳細</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 2rem;">
+                    案件がありません。管理画面から新規案件を登録してください。
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top: 1.5rem;">
+    <a href="/admin/projects/project/add/" class="btn btn-success">+ 新規案件登録</a>
+</div>
+{% endblock %}
