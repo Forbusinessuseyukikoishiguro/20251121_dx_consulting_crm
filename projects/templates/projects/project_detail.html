@@ -1,0 +1,162 @@
+{% extends 'projects/base.html' %}
+
+{% block title %}{{ project.title }} - DX Consulting CRM{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1rem;">
+    <a href="{% url 'projects:project_list' %}" class="btn btn-secondary">← 案件一覧に戻る</a>
+</div>
+
+<h1 style="margin-bottom: 2rem;">{{ project.title }}</h1>
+
+<!-- 基本情報 -->
+<div class="card">
+    <h2>📋 基本情報</h2>
+    <div class="grid grid-2">
+        <div>
+            <p><strong>顧客:</strong> {{ project.client.company_name }}</p>
+            <p><strong>担当者:</strong> {{ project.client.contact_person }}</p>
+            <p><strong>ステータス:</strong> 
+                {% if project.status == 'inquiry' %}<span class="badge badge-info">初回相談</span>
+                {% elif project.status == 'hearing' %}<span class="badge badge-primary">ヒアリング中</span>
+                {% elif project.status == 'proposal' %}<span class="badge badge-warning">提案作成中</span>
+                {% elif project.status == 'quotation' %}<span class="badge badge-warning">見積提示</span>
+                {% elif project.status == 'negotiation' %}<span class="badge badge-warning">商談中</span>
+                {% elif project.status == 'handover' %}<span class="badge badge-info">エンジニア引継ぎ</span>
+                {% elif project.status == 'in_progress' %}<span class="badge badge-success">実施中</span>
+                {% elif project.status == 'completed' %}<span class="badge badge-success">完了</span>
+                {% elif project.status == 'on_hold' %}<span class="badge">保留</span>
+                {% elif project.status == 'lost' %}<span class="badge badge-danger">失注</span>
+                {% endif %}
+            </p>
+        </div>
+        <div>
+            <p><strong>見積金額:</strong> {% if project.estimated_amount %}¥{{ project.estimated_amount|floatformat:0 }}{% else %}未設定{% endif %}</p>
+            <p><strong>開始予定日:</strong> {% if project.start_date %}{{ project.start_date|date:"Y年m月d日" }}{% else %}未設定{% endif %}</p>
+            <p><strong>完了予定日:</strong> {% if project.end_date %}{{ project.end_date|date:"Y年m月d日" }}{% else %}未設定{% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<!-- ご相談内容 -->
+<div class="card">
+    <h2>💬 ご相談内容</h2>
+    <div style="white-space: pre-wrap; line-height: 1.8;">{{ project.consultation_content|default:"記載なし" }}</div>
+</div>
+
+<!-- 提案内容 -->
+<div class="card">
+    <h2>📝 提案内容</h2>
+    <div style="white-space: pre-wrap; line-height: 1.8;">{{ project.proposal_content|default:"まだ作成されていません" }}</div>
+</div>
+
+<!-- 引継ぎ記録 -->
+<div class="card">
+    <h2>🔄 引継ぎ記録</h2>
+    {% if handovers %}
+    <table>
+        <thead>
+            <tr>
+                <th>引継ぎ先</th>
+                <th>担当者</th>
+                <th>引継ぎ日時</th>
+                <th>ステータス</th>
+                <th>内容</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for handover in handovers %}
+            <tr>
+                <td>{{ handover.get_handover_type_display }}</td>
+                <td>{{ handover.handover_to }}</td>
+                <td>{{ handover.handover_date|date:"Y/m/d H:i" }}</td>
+                <td>
+                    {% if handover.is_completed %}
+                    <span class="badge badge-success">完了</span>
+                    {% else %}
+                    <span class="badge badge-warning">対応中</span>
+                    {% endif %}
+                </td>
+                <td style="max-width: 300px;">{{ handover.handover_content|truncatewords:20 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>引継ぎ記録はまだありません。</p>
+    {% endif %}
+</div>
+
+<!-- エンジニアバトンタッチ -->
+<div class="card">
+    <h2>👨‍💻 エンジニアバトンタッチ記録</h2>
+    {% if engineer_handoffs %}
+    <table>
+        <thead>
+            <tr>
+                <th>エンジニア</th>
+                <th>引継ぎ日時</th>
+                <th>予算</th>
+                <th>承認状況</th>
+                <th>対応範囲</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for handoff in engineer_handoffs %}
+            <tr>
+                <td><strong>{{ handoff.engineer_name }}</strong></td>
+                <td>{{ handoff.handoff_date|date:"Y/m/d H:i" }}</td>
+                <td>{% if handoff.budget %}¥{{ handoff.budget|floatformat:0 }}{% else %}未設定{% endif %}</td>
+                <td>
+                    {% if handoff.is_accepted %}
+                    <span class="badge badge-success">承認済み</span>
+                    {% else %}
+                    <span class="badge badge-warning">承認待ち</span>
+                    {% endif %}
+                </td>
+                <td style="max-width: 300px;">{{ handoff.technical_scope|truncatewords:15 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>エンジニアへのバトンタッチ記録はまだありません。</p>
+    {% endif %}
+</div>
+
+<!-- 進捗記録 -->
+<div class="card">
+    <h2>📅 進捗記録</h2>
+    {% if progress_logs %}
+    <table>
+        <thead>
+            <tr>
+                <th>日時</th>
+                <th>活動種別</th>
+                <th>内容</th>
+                <th>次回アクション</th>
+                <th>記録者</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in progress_logs %}
+            <tr>
+                <td>{{ log.log_date|date:"Y/m/d H:i" }}</td>
+                <td>{{ log.get_activity_type_display }}</td>
+                <td style="max-width: 300px;">{{ log.content|truncatewords:20 }}</td>
+                <td style="max-width: 200px;">{{ log.next_action|truncatewords:15|default:"-" }}</td>
+                <td>{{ log.created_by }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>進捗記録はまだありません。</p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 1.5rem;">
+    <a href="/admin/projects/project/{{ project.pk }}/change/" class="btn btn-primary">編集</a>
+    <a href="/admin/projects/progresslog/add/?project={{ project.pk }}" class="btn btn-success">+ 進捗記録追加</a>
+</div>
+{% endblock %}

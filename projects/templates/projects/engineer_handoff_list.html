@@ -1,0 +1,69 @@
+{% extends 'projects/base.html' %}
+
+{% block title %}エンジニアバトンタッチ - DX Consulting CRM{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem;">👨‍💻 エンジニアバトンタッチ記録</h1>
+
+<!-- フィルター -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <form method="get" style="display: flex; gap: 1rem;">
+        <div class="form-group" style="min-width: 150px; margin-bottom: 0;">
+            <select name="status" class="form-control">
+                <option value="">全ての承認状況</option>
+                <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>承認待ち</option>
+                <option value="accepted" {% if current_status == 'accepted' %}selected{% endif %}>承認済み</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">検索</button>
+        <a href="{% url 'projects:engineer_handoff_list' %}" class="btn btn-secondary">クリア</a>
+    </form>
+</div>
+
+<!-- バトンタッチ一覧 -->
+<div class="card">
+    <h2>全{{ handoffs.count }}件</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>案件名</th>
+                <th>顧客</th>
+                <th>エンジニア</th>
+                <th>引継ぎ日時</th>
+                <th>予算</th>
+                <th>承認状況</th>
+                <th>技術対応範囲</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for handoff in handoffs %}
+            <tr>
+                <td><a href="{% url 'projects:project_detail' handoff.project.pk %}">{{ handoff.project.title }}</a></td>
+                <td>{{ handoff.project.client.company_name }}</td>
+                <td><strong>{{ handoff.engineer_name }}</strong></td>
+                <td>{{ handoff.handoff_date|date:"Y/m/d H:i" }}</td>
+                <td>{% if handoff.budget %}¥{{ handoff.budget|floatformat:0 }}{% else %}未設定{% endif %}</td>
+                <td>
+                    {% if handoff.is_accepted %}
+                    <span class="badge badge-success">承認済み</span>
+                    {% else %}
+                    <span class="badge badge-warning">承認待ち</span>
+                    {% endif %}
+                </td>
+                <td style="max-width: 300px;">{{ handoff.technical_scope|truncatewords:15 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 2rem;">
+                    エンジニアバトンタッチ記録がありません。
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top: 1.5rem;">
+    <a href="/admin/projects/engineerhandoff/add/" class="btn btn-success">+ 新規バトンタッチ記録</a>
+</div>
+{% endblock %}
