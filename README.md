@@ -81,8 +81,10 @@ python manage.py runserver
 - 管理画面: http://127.0.0.1:8000/admin/
 
 ### デフォルトの管理者アカウント（サンプルデータ投入済みの場合）
-- ユーザー名: `admin`
-- パスワード: `admin123`
+※ご自身で設定をお願い致します！
+- ユーザー名: `hogehoge`
+- パスワード: `hogehoge`
+- メールアドレス:'hogehoge@gmail.com'
 
 ## 📁 プロジェクト構成
 
