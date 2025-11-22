@@ -898,16 +898,18 @@ Windows の場合
 powershell# 仮想環境を作成
 #### python -m venv venv
 
-### 仮想環境を有効化
+### 仮想環境を有効化されたら？
 venv\Scripts\activate
 有効化されると、プロンプトの先頭に (venv) が表示されます。
 
 ステップ3: 必要なパッケージをインストール
-bash# requirements.txtから一括インストール
+bash 
+
+### requirements.txtから一括インストール
 #### pip install -r requirements.txt
 ```
 
-**実行例：**
+実行例：
 ```
 Collecting Django==4.2.7
 Collecting sqlparse>=0.3.1
@@ -919,7 +921,7 @@ bash# マイグレーション実行（データベース作成）
 #### python manage.py migrate
 ```
 
-**実行例：**
+実行例：
 ```
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, projects, sessions
@@ -929,7 +931,9 @@ Running migrations:
   ...
 
 ステップ5: サンプルデータを読み込み（オプション）
-bash# サンプルデータを読み込む
+bash
+
+### サンプルデータを読み込む
 #### python manage.py load_sample_data
 このコマンドにより、以下のサンプルデータが作成されます：
 
@@ -939,11 +943,11 @@ bash# サンプルデータを読み込む
 
 
 ステップ6: 開発サーバーを起動
-bash# サーバー起動
+bash # サーバー起動
 #### python manage.py runserver
 ```
 
-**表示例：**
+表示例：
 ```
 Watching for file changes with StatReloader
 Performing system checks...
