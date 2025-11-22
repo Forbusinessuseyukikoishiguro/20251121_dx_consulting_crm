@@ -874,7 +874,7 @@ total_estimated = Project.objects.filter(
 ## ★初回★
 ステップ1: リポジトリをクローン
 bash# 任意の作業フォルダに移動（例：デスクトップ）
-cd ~/Desktop
+#### cd ~/Desktop
 
 ### リポジトリをクローン
 git clone https://github.com/Forbusinessuseyukikoishiguro/20251121_dx_consulting_crm.git
@@ -883,20 +883,20 @@ git clone https://github.com/Forbusinessuseyukikoishiguro/20251121_dx_consulting
 cd 20251121_dx_consulting_crm
 Windows PowerShellの場合：
 powershellcd C:\Users\あなたのユーザー名\Desktop
-git clone https://github.com/Forbusinessuseyukikoishiguro/20251121_dx_consulting_crm.git
-cd 20251121_dx_consulting_crm
+#### git clone https://github.com/Forbusinessuseyukikoishiguro/20251121_dx_consulting_crm.git
+#### cd 20251121_dx_consulting_crm
 
 ステップ2: 仮想環境を作成・有効化
 Mac / Linux の場合
 bash# 仮想環境を作成
-python3 -m venv venv
+#### python3 -m venv venv
 
 ### 仮想環境を有効化
 source venv/bin/activate
 有効化されると、プロンプトの先頭に (venv) が表示されます。
 Windows の場合
 powershell# 仮想環境を作成
-python -m venv venv
+#### python -m venv venv
 
 ### 仮想環境を有効化
 venv\Scripts\activate
@@ -904,7 +904,7 @@ venv\Scripts\activate
 
 ステップ3: 必要なパッケージをインストール
 bash# requirements.txtから一括インストール
-pip install -r requirements.txt
+#### pip install -r requirements.txt
 ```
 
 **実行例：**
@@ -916,7 +916,7 @@ Successfully installed Django-4.2.7 asgiref-3.7.2 sqlparse-0.4.4
 
 ステップ4: データベースをセットアップ
 bash# マイグレーション実行（データベース作成）
-python manage.py migrate
+#### python manage.py migrate
 ```
 
 **実行例：**
@@ -930,7 +930,7 @@ Running migrations:
 
 ステップ5: サンプルデータを読み込み（オプション）
 bash# サンプルデータを読み込む
-python manage.py load_sample_data
+#### python manage.py load_sample_data
 このコマンドにより、以下のサンプルデータが作成されます：
 
 クライアント情報
@@ -940,7 +940,7 @@ python manage.py load_sample_data
 
 ステップ6: 開発サーバーを起動
 bash# サーバー起動
-python manage.py runserver
+#### python manage.py runserver
 ```
 
 **表示例：**
