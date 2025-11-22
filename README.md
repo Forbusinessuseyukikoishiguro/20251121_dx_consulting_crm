@@ -965,7 +965,8 @@ http://127.0.0.1:8000/
 
 ### ★コピペ用★
 Mac / Linux
-bash# クローン
+bash
+### クローン
 git clone https://github.com/Forbusinessuseyukikoishiguro/20251121_dx_consulting_crm.git
 cd 20251121_dx_consulting_crm
 
