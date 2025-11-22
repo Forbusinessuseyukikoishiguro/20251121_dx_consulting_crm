@@ -907,7 +907,6 @@ bash
 
 ### requirements.txtから一括インストール
 #### pip install -r requirements.txt
-```
 
 ```
 Collecting Django==4.2.7
@@ -918,7 +917,6 @@ Successfully installed Django-4.2.7 asgiref-3.7.2 sqlparse-0.4.4
 ステップ4: データベースをセットアップ
 bash# マイグレーション実行（データベース作成）
 #### python manage.py migrate
-```
 
 ```
 Operations to perform:
@@ -943,7 +941,6 @@ bash
 ステップ6: 開発サーバーを起動
 bash # サーバー起動
 #### python manage.py runserver
-```
 
 ```
 Watching for file changes with StatReloader
