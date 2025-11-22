@@ -909,7 +909,6 @@ bash
 #### pip install -r requirements.txt
 ```
 
-実行例：
 ```
 Collecting Django==4.2.7
 Collecting sqlparse>=0.3.1
@@ -921,7 +920,6 @@ bash# マイグレーション実行（データベース作成）
 #### python manage.py migrate
 ```
 
-実行例：
 ```
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, projects, sessions
@@ -947,7 +945,6 @@ bash # サーバー起動
 #### python manage.py runserver
 ```
 
-表示例：
 ```
 Watching for file changes with StatReloader
 Performing system checks...
@@ -959,7 +956,7 @@ Starting development server at http://127.0.0.1:8000/
 Quit the server with CTRL-BREAK.
 ```
 
-### ステップ7: ブラウザでアクセス
+ステップ7: ブラウザでアクセス
 
 ブラウザを開いて以下のURLにアクセスしてください：
 ```
